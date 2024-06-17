@@ -608,7 +608,7 @@ sky.material.uniforms['mieDirectionalG'].value = 0.95
 sky.material.uniforms['sunPosition'].value.set(0.3, -0.038, -0.95)
 
 // fog
-scene.fog = new THREE.FogExp2('#11343f', 0.1) //color, near, far
+scene.fog = new THREE.FogExp2('#11343f', 0.1, 0.2) //color, near, far
 
 
 
@@ -639,7 +639,6 @@ const tick = () =>
     const ghost3Angle = elapsedTime * 0.2
     ghost3.position.x = Math.cos(ghost3Angle) * 6
     ghost3.position.z = Math.sin(ghost3Angle) * 6
-    ghost3.position.y = Math.sin(ghost3Angle * 1.2) * Math.sin(ghost3Angle*0.8) * Math.sin(ghost3Angle*2.1)
     
     //spin galaxy
     points.rotation.y = elapsedTime * 0.5;
