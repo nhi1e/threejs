@@ -20,6 +20,115 @@ const scene = new THREE.Scene()
  * texture
  */
 const textureLoader = new THREE.TextureLoader()
+
+
+// galaxy
+
+// Textures
+const particleTexture = textureLoader.load('/particles/9.png')
+
+// Galaxy
+const parameters = {}
+parameters.count = 30000
+parameters.size = 0.07
+parameters.radius = 20
+parameters.branches = 5
+parameters.spin = 0.698
+parameters.randomness = 0.2
+parameters.randomnessPower = 6
+parameters.insideColor = "#ff6030"
+parameters.outsideColor = "#1b3984"
+
+let geometry = null
+let material = null
+let points = null
+const generateGalaxy = () => {
+
+    if(points !== null){ //destroy old galaxy
+        geometry.dispose()
+        material.dispose()
+        scene.remove(points)
+    }
+    geometry = new THREE.BufferGeometry()
+    const positions = new Float32Array(parameters.count * 3)
+    const colors = new Float32Array(parameters.count * 3)
+
+    const colorInside = new THREE.Color(parameters.insideColor)
+    const colorOutside = new THREE.Color(parameters.outsideColor)
+
+    
+    for(let i = 0; i < parameters.count; i++){
+        const i3 = i * 3
+
+        const radius = Math.random() * parameters.radius
+        const spinAngle = radius * parameters.spin //further away from center, more spin
+        const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2   
+
+        const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1  : -1) 
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1  : -1)
+        const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1  : -1)
+
+
+        positions[i3 + 0] = Math.cos(branchAngle + spinAngle)*radius + randomX  //x
+        positions[i3 + 1] = randomY
+        positions[i3 + 2] = Math.sin(branchAngle + spinAngle)*radius + randomZ //z
+
+        
+        const mixedColor = colorInside.clone()
+        mixedColor.lerp(colorOutside, radius / parameters.radius)
+
+        //color
+        colors[i3 + 0] = mixedColor.r
+        colors[i3 + 1] = mixedColor.g
+        colors[i3 + 2] = mixedColor.b
+
+    }
+
+    geometry.setAttribute(
+        'position', 
+        new THREE.BufferAttribute(positions, 3)
+    )
+    geometry.setAttribute(
+        'color', 
+        new THREE.BufferAttribute(colors, 3)
+    )   
+
+    //material
+    material = new THREE.PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true,
+        alphaMap: particleTexture,
+        transparent: true
+    })
+    //Points
+    points = new THREE.Points(geometry, material)
+    //shift galaxy up
+    points.position.y += 2
+    //rotate galaxy
+    points.rotation.x = Math.PI * 1/8
+    scene.add(points)
+}   
+
+generateGalaxy()
+
+gui.add(parameters, 'count').min(100).max(100000).step(100).onFinishChange(generateGalaxy)
+gui.add(parameters, 'size').min(0.001).max(0.1).step(0.001).onFinishChange(generateGalaxy)
+gui.add(parameters,'radius').min(0.1).max(20).step(0.1).onFinishChange(generateGalaxy)
+gui.add(parameters, 'branches').min(2).max(20).step(1).onFinishChange(generateGalaxy)
+gui.add(parameters, 'spin').min(-5).max(5).step(0.001).onFinishChange(generateGalaxy)
+gui.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateGalaxy)
+gui.add(parameters, 'randomnessPower').min(1).max(10).step(0.001).onFinishChange(generateGalaxy)
+gui.addColor(parameters, 'insideColor').onFinishChange(generateGalaxy)
+gui.addColor(parameters, 'outsideColor').onFinishChange(generateGalaxy)
+
+
+
+
+
+
 // Floor
 // const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg')
 // const floorColorTexture = textureLoader.load('./floor/aerial_rocks_02/aerial_rocks_02_diff_1k.jpg')
@@ -501,6 +610,10 @@ sky.material.uniforms['sunPosition'].value.set(0.3, -0.038, -0.95)
 // fog
 scene.fog = new THREE.FogExp2('#11343f', 0.1) //color, near, far
 
+
+
+
+
 /**
  * Animate
  */
@@ -527,6 +640,12 @@ const tick = () =>
     ghost3.position.x = Math.cos(ghost3Angle) * 6
     ghost3.position.z = Math.sin(ghost3Angle) * 6
     ghost3.position.y = Math.sin(ghost3Angle * 1.2) * Math.sin(ghost3Angle*0.8) * Math.sin(ghost3Angle*2.1)
+    
+    //spin galaxy
+    points.rotation.y = elapsedTime * 0.5;
+
+    
+    
     // Update controls
     controls.update()
 
