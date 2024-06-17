@@ -24,13 +24,13 @@ const particleTexture = textureLoader.load('/particles/9.png')
 
 // Galaxy
 const parameters = {}
-parameters.count = 10000
+parameters.count = 30000
 parameters.size = 0.02
 parameters.radius = 5
-parameters.branches = 3
-parameters.spin = 1
+parameters.branches = 5
+parameters.spin = 2
 parameters.randomness = 0.2
-parameters.randomnessPower = 3
+parameters.randomnessPower = 6
 parameters.insideColor = "#ff6030"
 parameters.outsideColor = "#1b3984"
 
@@ -180,6 +180,11 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+
+    // Rotation
+    
+    points.rotation.y = elapsedTime * 0.5;
 
     // Update controls
     controls.update()
