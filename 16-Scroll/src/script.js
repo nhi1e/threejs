@@ -70,6 +70,13 @@ scene.add(mesh1, mesh2, mesh3)
 const sectionMeshes = [mesh1, mesh2, mesh3]
 
 
+// Light
+// mesh toon needs light to work
+const directionalLight = new THREE.DirectionalLight('#ffffff',3)
+directionalLight.position.set(1, 1, 0)
+scene.add(directionalLight)
+
+
 //particles to show depth
 const particlesCount = 1000
 const posArray = new Float32Array(particlesCount * 3)
@@ -87,14 +94,10 @@ const particlesMaterial = new THREE.PointsMaterial({
     sizeAttenuation: true,
     size: 0.03
 })
+//Points
 const particles = new THREE.Points(particlesGeometry, particlesMaterial)
 scene.add(particles)
 
-// Light
-// mesh toon needs light to work
-const directionalLight = new THREE.DirectionalLight('#ffffff',3)
-directionalLight.position.set(1, 1, 0)
-scene.add(directionalLight)
 
 /**
  * Sizes
@@ -186,10 +189,10 @@ const tick = () =>
     //animate camera
     camera.position.y = -scrollY / sizes.height * objectsDistance //camera moves with the scroll
 
-    const parralaxX = cursor.x
-    const parralaxY = -cursor.y
+    const parralaxX = cursor.x * 0.5
+    const parralaxY = -cursor.y * 0.5
     cameraGroup.position.x += (parralaxX - cameraGroup.position.x) * 5 * deltaTime//putting it in a group so it camera moves with the scroll
-    cameraGroup.position.y += (parralaxY - cameraGroup.position.y) *   5 * deltaTime   
+    cameraGroup.position.y += (parralaxY - cameraGroup.position.y) * 5 * deltaTime   
 
 
 
