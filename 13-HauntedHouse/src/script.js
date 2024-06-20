@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Timer } from 'three/addons/misc/Timer.js'
 import { Sky } from 'three/examples/jsm/objects/Sky.js'
 import GUI from 'lil-gui'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js' 
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
 
 /**
  * Base
@@ -15,12 +17,50 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
-
 /**
  * texture
  */
 const textureLoader = new THREE.TextureLoader()
 
+/**
+ * Fonts
+ */
+const fontLoader = new FontLoader()
+fontLoader.load(
+    './fonts/helvetiker_regular.typeface.json',
+    (font) => {
+        
+    const textGeometry = new TextGeometry(
+        'haunted house',{
+            font: font,
+            size: 1.3,
+            depth: 0.2,
+            curveSegments: 5,
+            bevelEnabled: true,
+            bevelThickness: 0.02,
+            bevelOffset: 0,
+            bevelSize: 0.03,
+            bevelSegments: 4
+        }
+    )
+    textGeometry.center()
+
+    const matcapTexture = textureLoader.load('/textures/matcaps/1.png')
+    const textMaterial = new THREE.MeshMatcapMaterial({matcap: matcapTexture})
+    // const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    textMaterial.fog = false;  // Disable fog for this material
+
+    const text = new THREE.Mesh(textGeometry, textMaterial)
+
+    text.position.x = 3
+    text.position.y = 0.5
+    text.position.z = 50
+    // text.rotation.y = Math.PI * 0.1
+    scene.add(text)
+ 
+    }
+
+)
 
 // galaxy
 
@@ -494,7 +534,7 @@ house.add(windowLight2)
 const ghost1 = new THREE.PointLight('#8800ff', 6)
 const ghost2 = new THREE.PointLight('#00ff88', 6)
 const ghost3 = new THREE.PointLight('#ff0088', 6)
-scene.add(ghost1, ghost2, ghost3)
+// scene.add(ghost1, ghost2, ghost3)
 
 // gui.addColor(ghost1, 'color').name('ghost1Color')
 // gui.addColor(ghost2, 'color').name('ghost2Color')
@@ -531,9 +571,10 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 4
-camera.position.y = 2
-camera.position.z = 5
+// camera.position.x = 4
+// camera.position.y = 2
+// camera.position.z = 5
+camera.position.set(4, 2, 60)
 scene.add(camera)
 
 // Controls
