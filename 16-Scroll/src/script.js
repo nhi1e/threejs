@@ -27,7 +27,6 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-
 // texture
 const textureLoader = new THREE.TextureLoader()
 const gradientTexture = textureLoader.load('/textures/gradients/3.jpg')
@@ -55,11 +54,12 @@ const mesh3 = new THREE.Mesh(
     new THREE.TorusKnotGeometry(0.8, 0.35, 100, 16),
     material
 )
-
+// spread the objects out vertically
 mesh1.position.y = -objectsDistance * 0
 mesh2.position.y = -objectsDistance * 1
 mesh3.position.y = -objectsDistance * 2
 
+// zig zag the objects horizontally
 mesh1.position.x = 2
 mesh2.position.x = -2
 mesh3.position.x = 2
@@ -70,7 +70,7 @@ scene.add(mesh1, mesh2, mesh3)
 const sectionMeshes = [mesh1, mesh2, mesh3]
 
 
-//particles
+//particles to show depth
 const particlesCount = 1000
 const posArray = new Float32Array(particlesCount * 3)
 
@@ -91,6 +91,7 @@ const particles = new THREE.Points(particlesGeometry, particlesMaterial)
 scene.add(particles)
 
 // Light
+// mesh toon needs light to work
 const directionalLight = new THREE.DirectionalLight('#ffffff',3)
 directionalLight.position.set(1, 1, 0)
 scene.add(directionalLight)
@@ -144,11 +145,11 @@ let currentSection = 0
 
 window.addEventListener('scroll', () => {
     scrollY = window.scrollY
-    const newSection = Math.round(scrollY / sizes.height)
+    const newSection = Math.round(scrollY / sizes.height) //0, 1, 2 - rounding to the nearest section, detect scroll to next section
     if (newSection !== currentSection){
         currentSection = newSection
         gsap.to(
-            sectionMeshes[currentSection].rotation,
+            sectionMeshes[currentSection].rotation, 
             {
                 duration: 1.5,
                 ease: 'power2.inOut',
@@ -183,7 +184,7 @@ const tick = () =>
     previousTime = elapsedTime
 
     //animate camera
-    camera.position.y = -scrollY / sizes.height * objectsDistance
+    camera.position.y = -scrollY / sizes.height * objectsDistance //camera moves with the scroll
 
     const parralaxX = cursor.x
     const parralaxY = -cursor.y
