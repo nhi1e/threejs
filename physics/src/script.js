@@ -245,10 +245,11 @@ const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(7, 7),
     new THREE.MeshStandardMaterial({
         color: '#777777',
-        metalness: 0.3,
+        metalness: 0.1,
         roughness: 0.9,
         envMap: environmentMapTexture,
-        envMapIntensity: 0.5
+        envMapIntensity: 0.5,
+        wireframe: true
     })
 )
 floor.receiveShadow = true
@@ -299,7 +300,7 @@ window.addEventListener('resize', () =>
  */
 const objectsToUpdate = []
 const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
-const sphereMaterial = new THREE.MeshStandardMaterial({
+const sphereMaterial = new THREE.MeshToonMaterial({
     metalness: 0.3,
     roughness: 0.4,
     envMap: environmentMapTexture,
@@ -337,9 +338,9 @@ createSphere(0.5, {x: 1, y:3, z:0})
 
 //Box
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
-const boxMaterial = new THREE.MeshStandardMaterial({
-    metalness: 0.6,
-    roughness: 0.4,
+const boxMaterial = new THREE.MeshNormalMaterial({
+    // metalness: 0.6,
+    // roughness: 0.4,
     envMap: environmentMapTexture,
 })
 
