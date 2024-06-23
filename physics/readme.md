@@ -1,6 +1,5 @@
 # pile
-experimenting with CANNONjs
-pile never fills up
+- experimenting with CANNONjs
 ```
 Press 'b' to add box
       's' to add sphere
