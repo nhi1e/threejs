@@ -141,6 +141,7 @@ const defaultContactMaterial = new CANNON.ContactMaterial(
 world.addContactMaterial(defaultContactMaterial)
 world.defaultContactMaterial = defaultContactMaterial // all world objects will use this material
 
+
 // body - objects
 const sphereShape = new CANNON.Sphere(0.5) // radius same as threejs sphere
 const sphereBody = new CANNON.Body({
